@@ -7,6 +7,7 @@ let minutes = 0
 let start_flag = false
 let mode = 0
 let ticker = 0
+let ticker_period = 2
 // B button management Start when the time is set,
 // stop or resume when the timer is running
 input.onButtonPressed(Button.B, () => {
@@ -54,7 +55,7 @@ let start_time = 0
 mode = -1
 // Miliseconds per second. Fast debugging is available
 // with a small value.
-tunit = 100
+tunit = 1000
 // Main loop
 basic.forever(() => {
     if (mode == -1) {
@@ -91,12 +92,12 @@ basic.forever(() => {
                 basic.showLeds(`..#.#\n####.\n...#.\n...#.\n###..`)
                 music.playTone(200, 66)
             }
-            if (ticker < 2) {
-                basic.showNumber(minutes - elapsed_min)
-            } else {
+            ticker = (ticker + 1) % ticker_period
+            if (ticker == 0) {
                 basic.clearScreen()
+            } else {
+                basic.showNumber(minutes - elapsed_min)
             }
-            ticker = (ticker + 1) % 2
             if (elapsed_sec > next_lap) {
                 next_lap += tunit * 60
             }
