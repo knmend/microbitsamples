@@ -9,7 +9,7 @@ let mode = 0
 let ticker = 0
 let ticker_period = 2
 // B button management Start when the time is set,
-// stop or resume when the timer is running
+// pause or resume when the timer is running
 input.onButtonPressed(Button.B, () => {
     if (mode == 0 && minutes > 0) {
         // start
@@ -18,11 +18,11 @@ input.onButtonPressed(Button.B, () => {
         next_lap = tunit * 60
         last_minute = minutes
         start_flag = true
-    } else if (mode == 1) {
+    } else if (mode == 1) { // pausing timer
         mode = 2
         wait_start = game.currentTime()
         music.playTone(900, 66)
-    } else if (mode == 2) {
+    } else if (mode == 2) { // resuming timer
         mode = 1
         start_time += game.currentTime() - wait_start
         music.playTone(900, 66)
@@ -55,15 +55,15 @@ let start_time = 0
 mode = -1
 // Miliseconds per second. Fast debugging is available
 // with a small value.
-tunit = 100
+tunit = 1000
 // Main loop
 basic.forever(() => {
-    if (mode == -1) {
+    if (mode == -1) { // display pig nose
         basic.showLeds(`.###.\n#.#.#\n#.#.#\n#####\n.###.\n`)
         basic.pause(100)
-    } else if (mode == 0) {
+    } else if (mode == 0) { // wait for time being set
         basic.pause(10)
-    } else if (mode == 1) {
+    } else if (mode == 1) { // timer 
         if (start_flag) { // display start animation
             basic.showLeds(`.###.\n#.#.#\n#.#.#\n#####\n.###.\n`)
             music.playTone(150, 33)
@@ -86,25 +86,26 @@ basic.forever(() => {
             basic.pause(1000)
             mode = -1
             minutes = 0
-        } else {
+        } else { // display current status
             if (last_minute != minutes - elapsed_min) {
                 last_minute = minutes - elapsed_min
                 basic.showLeds(`..#.#\n####.\n...#.\n...#.\n###..`)
                 music.playTone(200, 66)
-            }
-            ticker = (ticker + 1) % ticker_period
-            basic.showNumber(minutes - elapsed_min)
-            if (ticker == 0) {
-                led.plot(4,0)
+            } else { // current minute with ticker
+                ticker = (ticker + 1) % ticker_period
+                basic.showNumber(minutes - elapsed_min)
+                if (ticker == 0) {
+                    led.plot(4,0)
+                }
             }
             if (elapsed_sec > next_lap) {
                 next_lap += tunit * 60
             }
             basic.pause(tunit)
         }
-    } else if (mode == 2) {
+    } else if (mode == 2) { // pausing
         basic.pause(100)
-    } else {
+    } else { // unknown mode
         music.playTone(900, 100)
         basic.showString("?")
         basic.pause(100)
