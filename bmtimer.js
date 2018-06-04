@@ -55,7 +55,7 @@ let start_time = 0
 mode = -1
 // Miliseconds per second. Fast debugging is available
 // with a small value.
-tunit = 1000
+tunit = 100
 // Main loop
 basic.forever(() => {
     if (mode == -1) {
@@ -93,10 +93,9 @@ basic.forever(() => {
                 music.playTone(200, 66)
             }
             ticker = (ticker + 1) % ticker_period
+            basic.showNumber(minutes - elapsed_min)
             if (ticker == 0) {
-                basic.clearScreen()
-            } else {
-                basic.showNumber(minutes - elapsed_min)
+                led.plot(4,0)
             }
             if (elapsed_sec > next_lap) {
                 next_lap += tunit * 60
