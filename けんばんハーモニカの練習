@@ -8,7 +8,7 @@ input.onButtonPressed(Button.A, function () {
     pins.digitalWritePin(DigitalPin.P1, 0)
 })
 
-input.onButtonPressed(Button.A, function () {
+input.onButtonPressed(Button., function () {
     basic.showNumber(3)
     basic.pause(250)
     basic.showNumber(2)
