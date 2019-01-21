@@ -1,4 +1,14 @@
 input.onButtonPressed(Button.A, function () {
+    servos.P2.setAngle(90)
+    basic.pause(150)
+    pins.digitalWritePin(DigitalPin.P1, 1)
+    music.ringTone(330)
+    basic.pause(260)
+    music.rest(10)
+    pins.digitalWritePin(DigitalPin.P1, 0)
+})
+
+input.onButtonPressed(Button.A, function () {
     basic.showNumber(3)
     basic.pause(250)
     basic.showNumber(2)
