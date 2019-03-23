@@ -8,6 +8,7 @@ let time_user: number = 0
 const colorModel_normal: number[][] = [[128, 16, 32], [32, 224, 32], [64, 16, 192]]
 const colorModel_setting: number[][] = [[0, 0, 0], [0, 255, 0], [0, 0, 255]]
 
+// Locks state and gradually dims lights. State is set as 0 (silent) after lights put off.
 function dimToSleep() {
     state = -1
     let cm: number[][] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -25,6 +26,8 @@ function dimToSleep() {
     strip.clear()
     state = 0
 }
+
+// Locks state and gradually puts lights on. State is set as 2 (working) after lights put off.
 function wakeUp() {
     state = -1
     let cm: number[][] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -42,6 +45,9 @@ function wakeUp() {
     state = 2
     sleep_counter = input.runningTime()
 }
+
+// Set time by A/B button.
+// A:hour, B:minutes
 input.onButtonPressed(Button.AB, function () {
     if (state == 0 || state == 2) {
         state = 1
@@ -57,8 +63,9 @@ input.onButtonPressed(Button.AB, function () {
         wakeUp()
     }
 })
+// Force to enter silent mode
 input.onButtonPressed(Button.B, function () {
-    if (state == 1) {
+    if (state == 1) { // count up hour
         time_user = (time_user + 60 * 1000) % 43200000
         music.playTone(440, 30)
         displayClock(time_user / 1000, colorModel_setting)
@@ -66,10 +73,11 @@ input.onButtonPressed(Button.B, function () {
         dimToSleep()
     }
 })
+// Wake up
 input.onButtonPressed(Button.A, function () {
     if (state == 0) {
         wakeUp()
-    } else if (state == 1) {
+    } else if (state == 1) { // count up minute
         time_user = (time_user + 3600 * 1000) % 43200000
         music.playTone(262, 30)
         displayClock(time_user / 1000, colorModel_setting)
@@ -85,7 +93,12 @@ strip.setBrightness(255)
 time_offset = input.runningTime()
 strip.clear()
 strip.show()
-
+// display clock for arbitrary number of LEDs
+// the number of LEDs are determined as "num_leds"
+// The color of LEDs are given as the variable colormodel
+// Parameters
+//   value : seconds
+//   colormodes : 3x3 matrix for hour, minute and second x RGB
 function displayClock(value: number, colormodel: number[][]) {
     let seconds = value / 60 - Math.round(value / 60)
     let minutes = value / 3600 - Math.round(value / 3600)
