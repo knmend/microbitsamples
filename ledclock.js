@@ -1,21 +1,35 @@
 let time_to_sleep = 0
 let sleep_counter = 0
 let state = 0
-function dimToSleep2() {
+function dimToSleep() {
     state = -1
-    for (let i = 0; i <= 20; i++) {
-        displayClock((input.runningTime() - time_offset) / 1000, colorModel_normal)
-        //       displayClock((input.runningTime() - time_offset) / 1000, 1.0 - i / 20, false)
+    let cm: number[][] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    let steps: number = 10
+    for (let i = 0; i <= steps; i++) {
+        let ratio: number = (Math.cos(i * Math.PI / steps) + 1) * .5
+        for (let j = 0; j < 3; j++) {
+            for (let k = 0; k < 3; k++) {
+                cm[j][k] = Math.round(colorModel_normal[j][k] * ratio)
+            }
+        }
+        displayClock((input.runningTime() - time_offset) / 1000, cm)
         basic.pause(10)
     }
     strip.clear()
     state = 0
 }
-function wakeUp2() {
+function wakeUp() {
     state = -1
-    for (let l = 0; l <= 20; l++) {
-        displayClock((input.runningTime() - time_offset) / 1000, colorModel_normal)
-        //        displayClock((input.runningTime() - time_offset) / 1000, l / 20, false)
+    let cm: number[][] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    let steps: number = 10
+    for (let i = 0; i <= steps; i++) {
+        let ratio: number = 1.0 - (Math.cos(i * Math.PI / steps) + 1) * .5
+        for (let j = 0; j < 3; j++) {
+            for (let k = 0; k < 3; k++) {
+                cm[j][k] = Math.round(colorModel_normal[j][k] * ratio)
+            }
+        }
+        displayClock((input.runningTime() - time_offset) / 1000, cm)
         basic.pause(10)
     }
     state = 2
@@ -27,28 +41,27 @@ input.onButtonPressed(Button.AB, function () {
         time_user = input.runningTime() - time_offset
         time_user = Math.round(time_user / 60000) * 60000
         music.playTone(392, 30)
-        basic.showString("S")
+        basic.showString("T")
         displayClock(time_user / 1000, colorModel_setting)
     } else if (state == 1) {
         time_offset = input.runningTime() - time_user
         music.playTone(392, 30)
         basic.clearScreen()
-        wakeUp2()
+        wakeUp()
     }
 })
 input.onButtonPressed(Button.B, function () {
     if (state == 1) {
         time_user = (time_user + 60 * 1000) % 43200000
         music.playTone(440, 30)
-        //        displayClock(time_user / 1000, 1, true)
         displayClock(time_user / 1000, colorModel_setting)
     } else if (state == 2) {
-        dimToSleep2()
+        dimToSleep()
     }
 })
 input.onButtonPressed(Button.A, function () {
     if (state == 0) {
-        wakeUp2()
+        wakeUp()
     } else if (state == 1) {
         time_user = (time_user + 3600 * 1000) % 43200000
         music.playTone(262, 30)
@@ -104,7 +117,7 @@ basic.forever(function () {
         displayClock((tm - time_offset) / 1000, colorModel_normal)
         basic.pause(100)
         if (tm - sleep_counter > time_to_sleep) {
-            dimToSleep2()
+            dimToSleep()
         }
     }
 })
