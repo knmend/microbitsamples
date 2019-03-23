@@ -1,6 +1,13 @@
-let time_to_sleep = 0
-let sleep_counter = 0
-let state = 0
+let time_to_sleep:number = 0
+let sleep_counter:number = 0
+let state:number = 0
+let strip: neopixel.Strip = null
+let num_leds: number = 0
+let time_offset: number = 0
+let time_user: number = 0
+const colorModel_normal: number[][] = [[128, 16, 32], [32, 224, 32], [64, 16, 192]]
+const colorModel_setting: number[][] = [[0, 0, 0], [0, 255, 0], [0, 0, 255]]
+
 function dimToSleep() {
     state = -1
     let cm: number[][] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -68,11 +75,7 @@ input.onButtonPressed(Button.A, function () {
         displayClock(time_user / 1000, colorModel_setting)
     }
 })
-let strip: neopixel.Strip = null
-let num_leds: number = 0
-let time_offset: number = 0
-let time_user: number = 0
-let tm = 0
+
 time_to_sleep = 15 * 60 * 1000
 state = 0
 num_leds = 30
@@ -82,8 +85,6 @@ strip.setBrightness(255)
 time_offset = input.runningTime()
 strip.clear()
 strip.show()
-let colorModel_normal: number[][] = [[128, 16, 32], [32, 224, 32], [64, 16, 192]]
-let colorModel_setting: number[][] = [[0, 0, 0], [0, 255, 0], [0, 0, 255]]
 
 function displayClock(value: number, colormodel: number[][]) {
     let seconds = value / 60 - Math.round(value / 60)
@@ -111,9 +112,9 @@ basic.forever(function () {
     if (state == 0) {
         basic.pause(1000)
     } else if (state == 1) {
-        basic.pause(100)
+        basic.pause(250)
     } else if (state == 2) {
-        tm = input.runningTime()
+        let tm = input.runningTime()
         displayClock((tm - time_offset) / 1000, colorModel_normal)
         basic.pause(100)
         if (tm - sleep_counter > time_to_sleep) {
