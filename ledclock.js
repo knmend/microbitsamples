@@ -2,13 +2,11 @@ let state = 0
 let strip: neopixel.Strip = null
 let num_leds: number = 0
 let time_offset: number = 0
-//let range = 0
 let sleep_counter: number = 0
 let time_user: number = 0
 let time_to_sleep: number = 15 * 60 * 1000
 
 state = 0
-//range = null
 num_leds = 30
 state = 2
 
@@ -68,12 +66,14 @@ input.onButtonPressed(Button.A, function () {
         wakeUp()
     } else if (state == 1) {
         time_user = (time_user + 3600 * 1000) % 43200000
+        music.playTone(Note.C4, 30)
         displayClock(time_user / 1000, 1, true)
     }
 })
 input.onButtonPressed(Button.B, function () {
     if (state == 1) {
         time_user = (time_user + 60 * 1000) % 43200000
+        music.playTone(Note.A4, 30)
         displayClock(time_user / 1000, 1, true)
     } else if (state == 2) {
         dimToSleep()
@@ -84,10 +84,12 @@ input.onButtonPressed(Button.AB, function () {
         state = 1
         time_user = input.runningTime() - time_offset
         time_user = Math.round(time_user / 60000) * 60000
-        displayClock(time_user, 1, false)
+        music.playTone(Note.G4, 30)
         basic.showString("S")
+        displayClock(time_user, 1, false)
     } else if (state == 1) {
         time_offset = input.runningTime() - time_user
+        music.playTone(Note.G4, 30)
         basic.clearScreen()
         wakeUp()
     }
