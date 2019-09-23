@@ -1,5 +1,16 @@
 /* Icon display function written by a parent */
-function LEDIcon (index: number) {
+input.onButtonPressed(Button.A, function () {
+    basic.showNumber(Math.round(input.temperature()))
+    basic.showNumber(Math.round(input.lightLevel()))
+    basic.pause(1000)
+    basic.clearScreen()
+})
+input.onButtonPressed(Button.B, function () {
+    strip.showRainbow()
+    basic.pause(1000)
+    strip.showColor(neopixel.colors(NeoPixelColors.Black))
+})
+function LEDIcon(index: number) {
     for (let i = 0; i <= 64 - 1; i++) {
         let slot = i < 32 ? 2 : 1
         let mask = 1 << (i & 0x1f)
@@ -44,9 +55,9 @@ basic.forever(function () {
             if (ピンの順番 == 0) {
                 注目のピン = pins.digitalReadPin(DigitalPin.P8)
             } else if (ピンの順番 == 1) {
-                注目のピン = pins.digitalReadPin(DigitalPin.P2)
-            } else if (ピンの順番 == 2) {
                 注目のピン = pins.digitalReadPin(DigitalPin.P16)
+            } else if (ピンの順番 == 2) {
+                注目のピン = pins.digitalReadPin(DigitalPin.P2)
             }
             if (ピンの状態[ピンの順番] != 注目のピン) {
                 ピンの状態[ピンの順番] = 注目のピン
