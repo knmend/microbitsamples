@@ -1,15 +1,10 @@
-/* Icon display function written by a parent */
 input.onButtonPressed(Button.A, function () {
     basic.showNumber(Math.round(input.temperature()))
     basic.showNumber(Math.round(input.lightLevel()))
     basic.pause(1000)
     basic.clearScreen()
 })
-input.onButtonPressed(Button.B, function () {
-    strip.showRainbow()
-    basic.pause(1000)
-    strip.showColor(neopixel.colors(NeoPixelColors.Black))
-})
+/* Icon display function written by a parent */
 function LEDIcon(index: number) {
     for (let i = 0; i <= 64 - 1; i++) {
         let slot = i < 32 ? 2 : 1
