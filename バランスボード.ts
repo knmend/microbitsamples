@@ -92,6 +92,8 @@ basic.forever(function () {
             }
             if (pins.digitalReadPin(DigitalPin.P1) == 1) {
                 music.beginMelody(music.builtInMelody(Melodies.JumpUp), MelodyOptions.Once)
+                basic.pause(1000)
+                basic.clearScreen()
                 ゲーム中 = 0
             }
             if (input.buttonIsPressed(Button.A) || input.buttonIsPressed(Button.B)) {
